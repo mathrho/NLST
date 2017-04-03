@@ -21,14 +21,14 @@ from util.io import load_referit_gt_mask as load_gt_mask
 ################################################################################
 
 def inference(config):
-    with open('./lang_model/lang_seg_model/test.prototxt', 'w') as f:
+    with open('./lang_seg_model/test.prototxt', 'w') as f:
         f.write(str(segmodel.generate_model('val', config)))
 
     caffe.set_device(config.gpu_id)
     caffe.set_mode_gpu()
 
     # Load pretrained model
-    net = caffe.Net('./lang_model/lang_seg_model/test.prototxt',
+    net = caffe.Net('./lang_seg_model/test.prototxt',
                     config.pretrained_model,
                     caffe.TEST)
 

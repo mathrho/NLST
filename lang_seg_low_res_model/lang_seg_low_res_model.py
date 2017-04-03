@@ -200,4 +200,3 @@ def generate_model(split, config):
     return n.to_proto()
 
 
-

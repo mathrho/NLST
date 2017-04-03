@@ -16,7 +16,7 @@ class Config():
         self.gpu_id = 0
         self.max_iter = 25000
 
-        self.weights = './snapshots/lang_model/lang_low_res_seg/_iter_30000.caffemodel'  # set as None if training from scratch
+        self.weights = './snapshots/lang_low_res_seg/_iter_30000.caffemodel'  # set as None if training from scratch
         self.fix_vgg = True  # set as False if finetuning VGG net
         self.vgg_dropout = False
         self.mlp_dropout = False
