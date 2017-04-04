@@ -138,13 +138,13 @@ for videofile in videofiles:
 
         # Final prediction
         upscores = sigmoid(upscores)
-        print( str(np.amax(upscores)) )
+        #print( str(np.amax(upscores)) )
         score_thresh = np.amax(upscores) * 0.5
         prediction = im_processing.resize_and_crop(upscores>score_thresh, *im.shape[:2]).astype(np.bool)
-        print( str(np.sum(prediction)) )
+        #print( str(np.sum(prediction)) )
 
         # save the results
-        if not os.path.exists('/home/zhenyang/Workspace/data/drones/results/results_lang_mask/'+video):
+        if not os.path.exists('/home/zhenyang/Workspace/data/drones/results/results_lang_seg_mask/'+video):
             os.makedirs('/home/zhenyang/Workspace/data/drones/results/results_lang_seg_mask/'+video)
         filename1 = '/home/zhenyang/Workspace/data/drones/results/results_lang_seg_mask/'+video+'/%06d.jpg' % (fi,)
         plt.imsave(filename1, np.array(prediction), cmap=cm.gray)
