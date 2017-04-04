@@ -90,7 +90,7 @@ for videofile in videofiles:
     start_frame_id = 1
 
     # First, select query
-    query = 'man on the left'
+    query = 'man in black on the left'
 
     frames = sorted(glob('/home/zhenyang/Workspace/data/drones/frames/'+video+'/*.jpg'))
     num_frames = len(frames)
