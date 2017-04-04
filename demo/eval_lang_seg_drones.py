@@ -147,7 +147,7 @@ for videofile in videofiles:
         if not os.path.exists('/home/zhenyang/Workspace/data/drones/results/results_lang_mask/'+video):
             os.makedirs('/home/zhenyang/Workspace/data/drones/results/results_lang_seg_mask/'+video)
         filename1 = '/home/zhenyang/Workspace/data/drones/results/results_lang_seg_mask/'+video+'/%06d.jpg' % (fi,)
-        plt.imsave(filename, np.array(prediction), cmap=cm.gray)
+        plt.imsave(filename1, np.array(prediction), cmap=cm.gray)
 
         if not os.path.exists('/home/zhenyang/Workspace/data/drones/results/results_lang_seg_bbox/'+video):
             os.makedirs('/home/zhenyang/Workspace/data/drones/results/results_lang_seg_bbox/'+video)
@@ -160,5 +160,5 @@ for videofile in videofiles:
         bbox = eval_tools.compute_bbox_max(filename2)
         cv2.rectangle(prediction_box, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 255, 0), 3)
         filename3 = '/home/zhenyang/Workspace/data/drones/results/results_lang_seg_bbox/'+video+'/%06d.jpg' % (fi,)
-        plt.imsave(filename, np.array(prediction_box), cmap=cm.gray)
+        plt.imsave(filename3, prediction_box)
 
