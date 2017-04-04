@@ -98,7 +98,7 @@ for videofile in videofiles:
     results = np.zeros((num_frames, 4), np.int)
     
     for fi in range(start_frame_id, num_frames+start_frame_id):
-        im_file = '/home/zhenyang/Workspace/data/drones/frames/' + video + '/%06d.jpg' % (fi,)      
+        im_file = '/home/zhenyang/Workspace/data/drones/frames/' + video + '/frame-%06d.jpg' % (fi,)      
         
         ###############################
         # Run on the input image and query text
