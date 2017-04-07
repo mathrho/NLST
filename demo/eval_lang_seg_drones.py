@@ -98,7 +98,7 @@ for videofile in videofiles:
     results = np.zeros((num_frames, 4), np.int)
     
     for fi in range(start_frame_id, num_frames+start_frame_id):
-        im_file = '/home/zhenyang/Workspace/data/drones/frames/' + video + '/frame-%06d.jpg' % (fi,)      
+        im_file = '/home/zhenyang/Workspace/data/drones/frames/' + video + '/%05d.jpg' % (fi,)      
         
         ###############################
         # Run on the input image and query text
@@ -146,12 +146,12 @@ for videofile in videofiles:
         # save the results
         if not os.path.exists('/home/zhenyang/Workspace/data/drones/results/results_lang_seg_mask/'+video):
             os.makedirs('/home/zhenyang/Workspace/data/drones/results/results_lang_seg_mask/'+video)
-        filename1 = '/home/zhenyang/Workspace/data/drones/results/results_lang_seg_mask/'+video+'/%06d.jpg' % (fi,)
+        filename1 = '/home/zhenyang/Workspace/data/drones/results/results_lang_seg_mask/'+video+'/%05d.jpg' % (fi,)
         plt.imsave(filename1, np.array(prediction), cmap=cm.gray)
 
         if not os.path.exists('/home/zhenyang/Workspace/data/drones/results/results_lang_seg_bbox/'+video):
             os.makedirs('/home/zhenyang/Workspace/data/drones/results/results_lang_seg_bbox/'+video)
-        filename2 = '/home/zhenyang/Workspace/data/drones/results/results_lang_seg_bbox/'+video+'/%06d.txt' % (fi,)
+        filename2 = '/home/zhenyang/Workspace/data/drones/results/results_lang_seg_bbox/'+video+'/%05d.txt' % (fi,)
         bbox_threshold = [20, 100, 110]
         param_thershold = str(bbox_threshold[0])+' '+str(bbox_threshold[1])+' '+str(bbox_threshold[2])
         os.system("bboxgenerator/./dt_box " + filename1+' '+param_thershold+' '+filename2)
@@ -159,6 +159,6 @@ for videofile in videofiles:
         prediction_box = np.copy(im)
         bbox = eval_tools.compute_bbox_max(filename2)
         cv2.rectangle(prediction_box, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 255, 0), 3)
-        filename3 = '/home/zhenyang/Workspace/data/drones/results/results_lang_seg_bbox/'+video+'/%06d.jpg' % (fi,)
+        filename3 = '/home/zhenyang/Workspace/data/drones/results/results_lang_seg_bbox/'+video+'/%05d.jpg' % (fi,)
         plt.imsave(filename3, prediction_box)
 

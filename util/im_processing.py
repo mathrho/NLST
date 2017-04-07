@@ -39,6 +39,41 @@ def resize_and_crop(im, input_h, input_w):
 
     return new_im
 
+def crop_and_pad_bboxes_subtract_mean(im, bboxes, crop_size, image_mean):
+    if isinstance(bboxes, list):
+        bboxes = np.array(bboxes)
+    bboxes = bboxes.reshape((-1, 4))
+
+    im_h, im_w = im.shape[:2]
+    num_bbox = bboxes.shape[0]
+    imcrop_batch = np.zeros((num_bbox, crop_size, crop_size, 3), dtype=np.float32)
+
+    # if need padding from largest sclaed box
+    offset_x1 = 0
+    offset_y1 = 0
+    box = bboxes[-1, :]
+    if box[0] < 1 or box[1] < 1 or box[2] > im_w or box[3] > im_h:
+        offset_x1 = np.maximum(1 - box[0], 0)
+        offset_y1 = np.maximum(1 - box[1], 0)          
+        offset_x2 = np.maximum(box[2] - im_w, 0)
+        offset_y2 = np.maximum(box[3] - im_h, 0)
+        im_pad = np.zeros((im_h+offset_y1+offset_y2,im_w+offset_x1+offset_x2,3), 'uint8')
+        im_pad[offset_y1:im_h+offset_y1, offset_x1:im_w+offset_x1, :] = im
+        im = im_pad
+
+    im = skimage.img_as_ubyte(im)
+    for n_bbox in range(bboxes.shape[0]):
+        xmin, ymin, xmax, ymax = bboxes[n_bbox]
+        # crop and resize
+        # imcrop = im[ymin:ymax+1, xmin:xmax+1, :]
+        imcrop = im[ymin+offset_y1-1:ymax+offset_y1, xmin+offset_x1-1:xmax+offset_x1, :]
+        #print('UserWarning: Possible precision loss when converting from float64 to uint8')
+        imcrop_resize = skimage.img_as_ubyte(
+                        skimage.transform.resize(imcrop, [crop_size, crop_size]))
+        imcrop_batch[n_bbox, ...] = imcrop_resize - image_mean
+    #imcrop_batch -= image_mean
+    return imcrop_batch
+
 def crop_bboxes_subtract_mean(im, bboxes, crop_size, image_mean):
     if isinstance(bboxes, list):
         bboxes = np.array(bboxes)
@@ -51,9 +86,11 @@ def crop_bboxes_subtract_mean(im, bboxes, crop_size, image_mean):
         xmin, ymin, xmax, ymax = bboxes[n_bbox]
         # crop and resize
         imcrop = im[ymin:ymax+1, xmin:xmax+1, :]
-        imcrop_batch[n_bbox, ...] = skimage.img_as_ubyte(
-            skimage.transform.resize(imcrop, [crop_size, crop_size]))
-    imcrop_batch -= image_mean
+        #print('UserWarning: Possible precision loss when converting from float64 to uint8')
+        imcrop_resize = skimage.img_as_ubyte(
+                        skimage.transform.resize(imcrop, [crop_size, crop_size]))
+        imcrop_batch[n_bbox, ...] = imcrop_resize - image_mean
+    #imcrop_batch -= image_mean
     return imcrop_batch
 
 def bboxes_from_masks(masks):
@@ -89,3 +126,21 @@ def crop_masks_subtract_mean(im, masks, crop_size, image_mean):
 
     imcrop_batch -= image_mean
     return imcrop_batch
+
+def crop_featmap_center(im):
+    im_h, im_w = im.shape[1:]
+    crop_h = int(np.floor(im_h) / 2)
+    crop_w = int(np.floor(im_w) / 2)
+    xmin, ymin, xmax, ymax = np.round([0.5*crop_w+1, 0.5*crop_h+1, 1.5*crop_w, 1.5*crop_h]).astype(int)
+    # crop feature map
+    imcrop = np.copy(im[:, ymin-1:ymax, xmin-1:xmax])
+    return imcrop
+
+def crop_featmap_from_center(im, ratio):
+    im_h, im_w = im.shape[1:]
+    crop_h = int(np.floor(im_h) / ratio)
+    crop_w = int(np.floor(im_w) / ratio)
+    xmin, ymin, xmax, ymax = np.round([0.5*(ratio-1)*crop_w+1, 0.5*(ratio-1)*crop_h+1, 0.5*(ratio+1)*crop_w, 0.5*(ratio+1)*crop_h]).astype(int)
+    # crop feature map
+    imcrop = np.copy(im[:, ymin-1:ymax, xmin-1:xmax])
+    return imcrop

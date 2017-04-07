@@ -34,7 +34,6 @@ def compute_mask_IU(masks, target):
     U = np.sum(np.logical_or(masks, target))
     return I, U
 
-# # all boxes are [num, height, width] binary array
 def compute_bbox_max(bbox_file):
     with open(bbox_file) as f:
         for line in f:
@@ -44,7 +43,7 @@ def compute_bbox_max(bbox_file):
     box2 = np.array(items[1::4]).T
     box3 = np.array(items[2::4]).T
     box4 = np.array(items[3::4]).T
-    bboxes = np.array([box1, box2, box1+box3, box2+box4]).T
+    bboxes = np.array([box1, box2, box1+box3-1, box2+box4-1]).T
 
     col1 = np.min(np.array([bboxes[:,0], bboxes[:,2]]), axis=0)
     col2 = np.min(np.array([bboxes[:,1], bboxes[:,3]]), axis=0)
@@ -61,5 +60,5 @@ def compute_bbox_max(bbox_file):
             max_sz = box_sz
             max_box = pred_box
 
-    return max_box-1
+    return max_box
 

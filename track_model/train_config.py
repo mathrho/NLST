@@ -43,9 +43,9 @@ class Config():
         self.iter_display = 100
 
         #import ipdb; ipdb.set_trace()
-        self.ov = np.loadtxt('./track_model/ov.txt', delimiter=',').reshape((44, 44))
-        self.template_labels = np.tile(generate_template_labels(self.ov)[np.newaxis, np.newaxis, :, :], (self.N, 1, 1, 1))
-        self.sample_weights = np.tile(generate_cost_weights(self.ov)[np.newaxis, np.newaxis, :, :], (self.N, 1, 1, 1))
+        #self.ov = np.loadtxt('./track_model/ov.txt', delimiter=',').reshape((44, 44))
+        #self.template_labels = np.tile(generate_template_labels(self.ov)[np.newaxis, np.newaxis, :, :], (self.N, 1, 1, 1))
+        #self.sample_weights = np.tile(generate_cost_weights(self.ov)[np.newaxis, np.newaxis, :, :], (self.N, 1, 1, 1))
         
         self.weights = './VGG16.v2.caffemodel'
         self.fix_vgg = False  # set False to finetune VGG net
